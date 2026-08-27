@@ -1,1214 +1,1932 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>AM2 PACS - Login</title>
-
-  <style>
-    :root {
-      /*
-       * ============================================================
-       * PERSONALIZAÇÃO DO CLIENTE
-       * ============================================================
-       */
-
-      --primary: #0867d8;
-      --primary-dark: #07437a;
-      --primary-darker: #032d55;
-      --primary-light: #2d8df4;
-
-      --background: #edf5ff;
-      --surface: #ffffff;
-
-      --text: #102c53;
-      --text-secondary: #73829b;
-
-      --border: #d9e2ee;
-
-      --radius-large: 30px;
-      --radius-medium: 12px;
-
-      --shadow:
-        0 24px 70px rgba(24, 68, 117, 0.13);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title id="pageTitle">AM2 PACS</title>
+
+    <style>
+        :root {
+            --primary: #0877c9;
+            --primary-hover: #0668b1;
+            --primary-dark: #063a67;
+            --primary-rgb: 8, 119, 201;
+
+            --background: #eef5fb;
+            --surface: #ffffff;
+
+            --text: #102c4c;
+            --text-secondary: #74849b;
+
+            --border: #dce5ef;
+            --error: #cf3b3b;
+
+            --radius: 14px;
+            --radius-large: 30px;
+
+            --shadow:
+                0 30px 80px rgba(23, 64, 105, 0.13);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Helvetica,
+                Arial,
+                sans-serif;
 
-    html,
-    body {
-      min-height: 100%;
-    }
+            color: var(--text);
 
-    body {
-      font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Helvetica,
-        Arial,
-        sans-serif;
+            background:
+                radial-gradient(
+                    circle at 15% 0%,
+                    rgba(255, 255, 255, 0.98),
+                    transparent 36%
+                ),
+                linear-gradient(
+                    135deg,
+                    #f8fbff 0%,
+                    var(--background) 100%
+                );
 
-      background:
-        radial-gradient(
-          circle at 10% 10%,
-          rgba(255, 255, 255, 0.95),
-          transparent 35%
-        ),
-        linear-gradient(
-          135deg,
-          #f8fbff 0%,
-          var(--background) 100%
-        );
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-      color: var(--text);
+            padding: 32px;
+        }
 
-      min-height: 100vh;
+        button,
+        input {
+            font: inherit;
+        }
 
-      display: flex;
-      flex-direction: column;
+        /* =======================================================
+           FUNDO DECORATIVO
+           ======================================================= */
 
-      padding: 3.5vh 4vw 20px;
+        .page-decoration {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
 
-      overflow-x: hidden;
-    }
+        .page-decoration::before {
+            content: "";
 
-    /* ============================================================
-       BACKGROUND DECORATIVO
-       ============================================================ */
+            position: absolute;
 
-    .background-lines {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 0;
-      opacity: 0.7;
-    }
+            width: 1100px;
+            height: 1100px;
 
-    .background-lines::before {
-      content: "";
-      position: absolute;
+            top: -780px;
+            right: -150px;
 
-      width: 1300px;
-      height: 500px;
+            border-radius: 50%;
 
-      left: -200px;
-      top: -250px;
+            border:
+                1px solid
+                rgba(var(--primary-rgb), 0.08);
 
-      border-radius: 50%;
+            box-shadow:
+                0 32px 0 rgba(var(--primary-rgb), 0.035),
+                0 64px 0 rgba(var(--primary-rgb), 0.03),
+                0 96px 0 rgba(var(--primary-rgb), 0.025);
+        }
 
-      border: 1px solid rgba(52, 120, 210, 0.08);
+        .page-decoration::after {
+            content: "";
 
-      box-shadow:
-        0 20px 0 rgba(52, 120, 210, 0.04),
-        0 40px 0 rgba(52, 120, 210, 0.035),
-        0 60px 0 rgba(52, 120, 210, 0.03),
-        0 80px 0 rgba(52, 120, 210, 0.025);
-    }
+            position: absolute;
 
-    /* ============================================================
-       CONTAINER
-       ============================================================ */
+            width: 900px;
+            height: 900px;
 
-    .login-wrapper {
-      position: relative;
-      z-index: 1;
+            bottom: -700px;
+            left: -180px;
 
-      width: min(1360px, 100%);
-      min-height: 760px;
+            border-radius: 50%;
 
-      margin: auto;
+            border:
+                1px solid
+                rgba(var(--primary-rgb), 0.07);
+        }
 
-      display: grid;
-      grid-template-columns: 56% 44%;
+        /* =======================================================
+           PÁGINA
+           ======================================================= */
 
-      background: var(--surface);
+        .page {
+            width: min(1420px, 100%);
 
-      border-radius: var(--radius-large);
+            position: relative;
+            z-index: 2;
+        }
 
-      overflow: hidden;
+        .login-container {
+            width: 100%;
 
-      box-shadow: var(--shadow);
-    }
+            min-height: min(810px, calc(100vh - 110px));
 
-    /* ============================================================
-       LADO ESQUERDO
-       ============================================================ */
+            display: grid;
 
-    .brand-panel {
-      position: relative;
+            grid-template-columns:
+                minmax(500px, 1.22fr)
+                minmax(430px, 0.78fr);
 
-      padding: 70px 70px 55px;
+            background: var(--surface);
 
-      color: white;
+            border-radius: var(--radius-large);
 
-      display: flex;
-      flex-direction: column;
+            overflow: hidden;
 
-      overflow: hidden;
+            box-shadow: var(--shadow);
+        }
 
-      background:
-        linear-gradient(
-          110deg,
-          rgba(2, 38, 73, 0.97) 0%,
-          rgba(5, 65, 117, 0.87) 48%,
-          rgba(12, 82, 148, 0.48) 100%
-        ),
-        url("pacs-background.jpg")
-        center / cover no-repeat;
-    }
+        /* =======================================================
+           LADO DA MARCA
+           ======================================================= */
 
-    .brand-panel::after {
-      content: "";
+        .brand-side {
+            position: relative;
 
-      position: absolute;
+            display: flex;
+            flex-direction: column;
 
-      width: 800px;
-      height: 330px;
+            padding: 60px 65px 52px;
 
-      bottom: -260px;
-      left: -60px;
+            color: white;
 
-      border: 2px solid rgba(48, 148, 255, 0.8);
+            isolation: isolate;
 
-      border-radius: 50%;
+            overflow: hidden;
 
-      transform: rotate(-7deg);
-    }
+            background-color: var(--primary-dark);
+        }
 
-    /* ============================================================
-       LOGO
-       ============================================================ */
+        .brand-background {
+            position: absolute;
 
-    .client-logo {
-      position: relative;
-      z-index: 2;
+            inset: 0;
 
-      display: flex;
-      align-items: center;
-      gap: 18px;
+            z-index: -4;
 
-      min-height: 65px;
-    }
+            background-image:
+                url("/login-background.jpg");
 
-    .client-logo img {
-      max-width: 220px;
-      max-height: 65px;
+            background-size: cover;
+            background-position: center;
 
-      object-fit: contain;
-      object-position: left center;
-    }
+            transform: scale(1.015);
+        }
 
-    .logo-placeholder {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
+        .brand-overlay {
+            position: absolute;
 
-    .logo-placeholder-icon {
-      width: 62px;
-      height: 62px;
+            inset: 0;
 
-      border: 2px dashed rgba(255, 255, 255, 0.75);
+            z-index: -3;
 
-      border-radius: 12px;
+            background:
+                linear-gradient(
+                    100deg,
+                    rgba(3, 37, 70, 0.97) 0%,
+                    rgba(5, 58, 101, 0.91) 43%,
+                    rgba(var(--primary-rgb), 0.58) 100%
+                );
+        }
 
-      display: grid;
-      place-items: center;
+        .brand-overlay::after {
+            content: "";
 
-      font-size: 28px;
-    }
+            position: absolute;
 
-    .logo-placeholder strong {
-      display: block;
+            inset: 0;
 
-      font-size: 20px;
+            background:
+                radial-gradient(
+                    circle at 80% 52%,
+                    rgba(255, 255, 255, 0.08),
+                    transparent 32%
+                );
+        }
 
-      letter-spacing: 3px;
-    }
+        .brand-curve {
+            position: absolute;
 
-    .logo-placeholder span {
-      font-size: 13px;
+            width: 1050px;
+            height: 450px;
 
-      letter-spacing: 4px;
+            left: -90px;
+            bottom: -355px;
 
-      opacity: 0.7;
-    }
+            border-radius: 50%;
 
-    /* ============================================================
-       TEXTO
-       ============================================================ */
+            border:
+                2px solid
+                rgba(36, 146, 255, 0.85);
 
-    .brand-content {
-      position: relative;
-      z-index: 2;
+            z-index: -1;
 
-      max-width: 530px;
+            transform: rotate(-6deg);
+        }
 
-      margin-top: auto;
-      margin-bottom: auto;
-    }
+        /* =======================================================
+           LOGO
+           ======================================================= */
 
-    .brand-content h1 {
-      font-size: clamp(38px, 3vw, 54px);
+        .logo-area {
+            min-height: 80px;
 
-      line-height: 1.12;
+            display: flex;
+            align-items: center;
 
-      letter-spacing: -1.8px;
+            position: relative;
+            z-index: 2;
+        }
 
-      font-weight: 700;
+        .logo-area img {
+            display: block;
 
-      margin-bottom: 25px;
-    }
+            width: auto;
 
-    .brand-content h1 span {
-      color: #2694ff;
-    }
+            max-width: 245px;
+            max-height: 78px;
 
-    .brand-separator {
-      width: 58px;
-      height: 4px;
+            object-fit: contain;
+            object-position: left center;
 
-      border-radius: 20px;
+            filter:
+                drop-shadow(
+                    0 4px 12px rgba(0, 0, 0, 0.08)
+                );
+        }
 
-      background: #268eff;
+        /* =======================================================
+           TEXTO INSTITUCIONAL
+           ======================================================= */
 
-      margin-bottom: 28px;
-    }
+        .brand-content {
+            margin-top: auto;
+            margin-bottom: auto;
 
-    .brand-content p {
-      max-width: 490px;
+            padding: 40px 0 50px;
 
-      font-size: 17px;
+            max-width: 600px;
+        }
 
-      line-height: 1.65;
+        .brand-title {
+            margin: 0;
 
-      color: rgba(255, 255, 255, 0.82);
-    }
+            font-size: clamp(38px, 3.15vw, 57px);
 
-    /* ============================================================
-       BENEFÍCIOS
-       ============================================================ */
+            line-height: 1.09;
 
-    .benefits {
-      position: relative;
-      z-index: 2;
+            letter-spacing: -2px;
 
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+            font-weight: 720;
+        }
 
-      gap: 26px;
+        .brand-title-highlight {
+            color: #3198f4;
+        }
 
-      margin-top: 30px;
-    }
+        .brand-line {
+            width: 58px;
+            height: 4px;
 
-    .benefit {
-      text-align: left;
-    }
+            margin: 29px 0 27px;
 
-    .benefit-icon {
-      width: 60px;
-      height: 60px;
+            border-radius: 10px;
 
-      border-radius: 13px;
+            background: #349af5;
+        }
 
-      background: rgba(255, 255, 255, 0.11);
+        .brand-description {
+            margin: 0;
 
-      display: grid;
-      place-items: center;
+            max-width: 510px;
 
-      margin-bottom: 17px;
+            color:
+                rgba(255, 255, 255, 0.82);
 
-      backdrop-filter: blur(10px);
+            font-size: 17px;
 
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
+            line-height: 1.65;
+        }
 
-    .benefit-icon svg {
-      width: 29px;
-      height: 29px;
+        /* =======================================================
+           BENEFÍCIOS
+           ======================================================= */
 
-      stroke: white;
+        .benefits {
+            display: grid;
 
-      stroke-width: 1.7;
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
 
-      fill: none;
-    }
+            gap: 30px;
 
-    .benefit strong {
-      display: block;
+            margin-top: 15px;
+        }
 
-      font-size: 15px;
+        .benefit-icon {
+            width: 58px;
+            height: 58px;
 
-      margin-bottom: 7px;
-    }
+            display: grid;
+            place-items: center;
 
-    .benefit p {
-      font-size: 12px;
+            margin-bottom: 15px;
 
-      line-height: 1.5;
+            border-radius: 14px;
 
-      color: rgba(255, 255, 255, 0.65);
-    }
+            background:
+                rgba(255, 255, 255, 0.1);
 
-    /* ============================================================
-       LOGIN
-       ============================================================ */
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.08);
 
-    .login-panel {
-      position: relative;
+            backdrop-filter: blur(9px);
+        }
 
-      padding: 80px 65px;
+        .benefit-icon svg {
+            width: 28px;
+            height: 28px;
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+            stroke: white;
 
-      background:
-        radial-gradient(
-          circle at 100% 50%,
-          rgba(220, 236, 255, 0.55),
-          transparent 45%
-        ),
-        white;
-    }
+            stroke-width: 1.65;
 
-    .login-box {
-      width: min(460px, 100%);
-    }
+            fill: none;
+        }
 
-    .login-header {
-      text-align: center;
+        .benefit strong {
+            display: block;
 
-      margin-bottom: 42px;
-    }
+            margin-bottom: 6px;
 
-    .login-header h2 {
-      font-size: 27px;
+            font-size: 15px;
+        }
 
-      margin-bottom: 13px;
+        .benefit span {
+            display: block;
 
-      color: var(--text);
-    }
+            color:
+                rgba(255, 255, 255, 0.64);
 
-    .login-header p {
-      font-size: 14px;
+            font-size: 12px;
 
-      color: var(--text-secondary);
-    }
+            line-height: 1.5;
+        }
 
-    /* ============================================================
-       FORM
-       ============================================================ */
+        /* =======================================================
+           ÁREA LOGIN
+           ======================================================= */
 
-    .field {
-      margin-bottom: 22px;
-    }
+        .login-side {
+            position: relative;
 
-    .field label {
-      display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-      font-size: 14px;
+            padding: 65px 58px;
 
-      font-weight: 600;
+            background:
+                radial-gradient(
+                    circle at 115% 50%,
+                    rgba(var(--primary-rgb), 0.07),
+                    transparent 43%
+                ),
+                #fff;
+        }
 
-      margin-bottom: 10px;
-    }
+        .login-side::after {
+            content: "";
 
-    .input-wrapper {
-      position: relative;
-    }
+            position: absolute;
 
-    .input-wrapper svg {
-      position: absolute;
+            width: 380px;
+            height: 720px;
 
-      width: 22px;
-      height: 22px;
+            right: -315px;
 
-      left: 18px;
-      top: 50%;
+            top: 50%;
 
-      transform: translateY(-50%);
+            transform: translateY(-50%);
 
-      stroke: #8694a9;
-      fill: none;
+            border-radius: 50%;
 
-      stroke-width: 1.6;
-    }
+            background:
+                rgba(var(--primary-rgb), 0.035);
+        }
 
-    .input-wrapper input {
-      width: 100%;
+        .login-box {
+            position: relative;
 
-      height: 62px;
+            z-index: 1;
 
-      padding: 0 53px;
+            width: min(455px, 100%);
+        }
 
-      border: 1px solid var(--border);
+        .login-heading {
+            text-align: center;
 
-      border-radius: var(--radius-medium);
+            margin-bottom: 38px;
+        }
 
-      outline: none;
+        .login-heading h2 {
+            margin: 0 0 11px;
 
-      font-size: 15px;
+            font-size: 28px;
 
-      color: var(--text);
+            letter-spacing: -0.5px;
 
-      transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
-    }
+            color: var(--text);
+        }
 
-    .input-wrapper input::placeholder {
-      color: #9ca8ba;
-    }
+        .login-heading p {
+            margin: 0;
 
-    .input-wrapper input:focus {
-      border-color: var(--primary);
+            color: var(--text-secondary);
 
-      box-shadow:
-        0 0 0 4px rgba(8, 103, 216, 0.1);
-    }
+            font-size: 14px;
 
-    .password-toggle {
-      position: absolute;
+            line-height: 1.55;
+        }
 
-      right: 15px;
-      top: 50%;
+        /* =======================================================
+           FORMULÁRIO
+           ======================================================= */
 
-      transform: translateY(-50%);
+        .form-group {
+            margin-bottom: 20px;
+        }
 
-      background: none;
-      border: none;
+        .form-group label {
+            display: block;
 
-      cursor: pointer;
+            margin-bottom: 9px;
 
-      color: #8391a6;
+            font-size: 14px;
 
-      display: flex;
-    }
+            font-weight: 650;
 
-    .password-toggle svg {
-      position: static;
+            color: var(--text);
+        }
 
-      transform: none;
-    }
+        .input-box {
+            position: relative;
+        }
 
-    .forgot {
-      display: flex;
-      justify-content: flex-end;
+        .input-icon {
+            position: absolute;
 
-      margin-top: -8px;
-      margin-bottom: 28px;
-    }
+            left: 17px;
+            top: 50%;
 
-    .forgot a {
-      font-size: 13px;
+            width: 22px;
+            height: 22px;
 
-      color: var(--primary);
+            transform: translateY(-50%);
 
-      text-decoration: none;
-    }
+            stroke: #8492a7;
 
-    .forgot a:hover {
-      text-decoration: underline;
-    }
+            stroke-width: 1.6;
 
-    /* ============================================================
-       BOTÕES
-       ============================================================ */
+            fill: none;
 
-    .btn-primary {
-      width: 100%;
+            pointer-events: none;
+        }
 
-      height: 56px;
+        .input-box input {
+            width: 100%;
+            height: 61px;
 
-      border: none;
+            padding:
+                0
+                52px
+                0
+                52px;
 
-      border-radius: 8px;
+            border:
+                1px solid
+                var(--border);
 
-      background:
-        linear-gradient(
-          100deg,
-          var(--primary-dark),
-          var(--primary-light)
-        );
+            border-radius:
+                var(--radius);
 
-      color: white;
+            outline: none;
 
-      font-size: 16px;
+            color: var(--text);
 
-      font-weight: 600;
+            font-size: 15px;
 
-      cursor: pointer;
+            background: #fff;
 
-      transition:
-        transform 0.15s ease,
-        box-shadow 0.2s ease;
-    }
+            transition:
+                border-color 0.18s ease,
+                box-shadow 0.18s ease;
+        }
 
-    .btn-primary:hover {
-      transform: translateY(-1px);
+        .input-box input::placeholder {
+            color: #a0acbc;
+        }
 
-      box-shadow:
-        0 8px 22px rgba(8, 103, 216, 0.24);
-    }
+        .input-box input:focus {
+            border-color: var(--primary);
 
-    .btn-primary:active {
-      transform: translateY(0);
-    }
+            box-shadow:
+                0 0 0 4px
+                rgba(var(--primary-rgb), 0.1);
+        }
 
-    /* ============================================================
-       DIVISOR
-       ============================================================ */
+        .password-toggle {
+            position: absolute;
 
-    .divider {
-      display: flex;
-      align-items: center;
+            right: 12px;
+            top: 50%;
 
-      gap: 20px;
+            width: 40px;
+            height: 40px;
 
-      margin: 28px 0;
+            transform: translateY(-50%);
 
-      color: #93a0b2;
+            display: grid;
+            place-items: center;
 
-      font-size: 12px;
-    }
+            border: 0;
 
-    .divider::before,
-    .divider::after {
-      content: "";
+            border-radius: 9px;
 
-      flex: 1;
+            background: transparent;
 
-      height: 1px;
+            cursor: pointer;
+        }
 
-      background: var(--border);
-    }
+        .password-toggle:hover {
+            background:
+                rgba(var(--primary-rgb), 0.06);
+        }
 
-    .btn-sso {
-      width: 100%;
+        .password-toggle svg {
+            width: 21px;
+            height: 21px;
 
-      height: 53px;
+            stroke: #7d8aa0;
 
-      border: 1px solid var(--border);
+            stroke-width: 1.65;
 
-      border-radius: 8px;
+            fill: none;
+        }
 
-      background: white;
+        /* =======================================================
+           AÇÕES
+           ======================================================= */
 
-      font-size: 14px;
-      font-weight: 500;
+        .form-options {
+            display: flex;
 
-      color: #53617a;
+            justify-content: flex-end;
 
-      cursor: pointer;
+            margin:
+                -5px
+                0
+                27px;
+        }
 
-      transition:
-        background 0.2s ease,
-        border 0.2s ease;
-    }
+        .forgot-link {
+            color: var(--primary);
 
-    .btn-sso:hover {
-      background: #f8fbff;
+            font-size: 13px;
 
-      border-color: #b9c9dd;
-    }
+            font-weight: 500;
 
-    /* ============================================================
-       LGPD
-       ============================================================ */
+            text-decoration: none;
+        }
 
-    .security-message {
-      display: flex;
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
 
-      align-items: center;
-      justify-content: center;
+        .login-button {
+            width: 100%;
+            height: 57px;
 
-      gap: 12px;
+            display: flex;
 
-      margin-top: 60px;
+            align-items: center;
+            justify-content: center;
 
-      font-size: 13px;
+            gap: 9px;
 
-      color: #74849a;
+            border: 0;
 
-      line-height: 1.4;
-    }
+            border-radius: 10px;
 
-    .security-message svg {
-      flex: 0 0 auto;
+            color: white;
 
-      width: 23px;
-      height: 23px;
+            background:
+                linear-gradient(
+                    100deg,
+                    var(--primary-dark),
+                    var(--primary)
+                );
 
-      stroke: var(--primary);
+            font-size: 15px;
 
-      fill: none;
+            font-weight: 650;
 
-      stroke-width: 1.7;
-    }
+            cursor: pointer;
 
-    /* ============================================================
-       FOOTER
-       ============================================================ */
+            box-shadow:
+                0 8px 22px
+                rgba(var(--primary-rgb), 0.19);
 
-    .page-footer {
-      position: relative;
-      z-index: 2;
+            transition:
+                transform 0.15s ease,
+                box-shadow 0.15s ease,
+                filter 0.15s ease;
+        }
 
-      width: min(1360px, 100%);
+        .login-button:hover {
+            transform: translateY(-1px);
 
-      margin: 18px auto 0;
+            filter: brightness(1.035);
 
-      display: grid;
+            box-shadow:
+                0 12px 26px
+                rgba(var(--primary-rgb), 0.25);
+        }
 
-      grid-template-columns:
-        1fr
-        auto
-        1fr;
+        .login-button:active {
+            transform: translateY(0);
+        }
 
-      align-items: center;
+        .login-button:disabled {
+            opacity: 0.7;
 
-      color: #647896;
+            cursor: wait;
 
-      font-size: 12px;
-    }
+            transform: none;
+        }
 
-    .copyright {
-      grid-column: 2;
-    }
+        /* =======================================================
+           ERRO
+           ======================================================= */
 
-    .footer-controls {
-      grid-column: 3;
+        .login-error {
+            display: none;
 
-      display: flex;
+            padding: 12px 14px;
 
-      justify-content: flex-end;
+            margin-bottom: 18px;
 
-      gap: 10px;
-    }
+            border-radius: 10px;
 
-    .footer-select {
-      padding: 9px 16px;
+            background: #fff3f3;
 
-      background: rgba(255, 255, 255, 0.55);
+            border: 1px solid #f5cece;
 
-      border: 1px solid rgba(173, 194, 219, 0.7);
+            color: #ae3434;
 
-      border-radius: 12px;
+            font-size: 13px;
 
-      color: #64758d;
+            line-height: 1.4;
+        }
 
-      cursor: pointer;
-    }
+        .login-error.visible {
+            display: block;
+        }
 
-    /* ============================================================
-       RESPONSIVIDADE
-       ============================================================ */
+        /* =======================================================
+           SEGURANÇA
+           ======================================================= */
 
-    @media (max-width: 1000px) {
-      body {
-        padding: 20px;
-      }
+        .security-info {
+            display: flex;
 
-      .login-wrapper {
-        grid-template-columns: 1fr;
+            justify-content: center;
+            align-items: center;
 
-        max-width: 620px;
-      }
+            gap: 11px;
 
-      .brand-panel {
-        padding: 45px;
+            margin-top: 47px;
 
-        min-height: 470px;
-      }
+            color: #78889e;
 
-      .brand-content {
-        margin-top: 70px;
-      }
+            font-size: 12.5px;
 
-      .brand-content h1 {
-        font-size: 38px;
-      }
+            line-height: 1.4;
+        }
 
-      .login-panel {
-        padding: 60px 40px;
-      }
+        .security-info svg {
+            flex: 0 0 auto;
 
-      .page-footer {
-        display: flex;
+            width: 22px;
+            height: 22px;
 
-        flex-direction: column;
+            stroke: var(--primary);
 
-        gap: 12px;
-      }
+            stroke-width: 1.7;
 
-      .footer-controls {
-        justify-content: center;
-      }
-    }
+            fill: none;
+        }
 
-    @media (max-width: 620px) {
-      body {
-        padding: 0;
-      }
+        /* =======================================================
+           RODAPÉ
+           ======================================================= */
 
-      .login-wrapper {
-        border-radius: 0;
+        .footer {
+            display: flex;
 
-        min-height: 100vh;
-      }
+            align-items: center;
+            justify-content: space-between;
 
-      .brand-panel {
-        min-height: 390px;
+            gap: 20px;
 
-        padding: 35px 28px;
-      }
+            min-height: 55px;
 
-      .brand-content {
-        margin-top: 55px;
-      }
+            padding: 14px 15px 0;
 
-      .brand-content h1 {
-        font-size: 32px;
-      }
+            color: #667b96;
 
-      .brand-content p {
-        font-size: 14px;
-      }
+            font-size: 12px;
+        }
 
-      .benefits {
-        display: none;
-      }
+        .powered {
+            display: flex;
 
-      .login-panel {
-        padding: 55px 26px;
-      }
+            align-items: center;
 
-      .security-message {
-        margin-top: 40px;
-      }
+            gap: 6px;
+        }
 
-      .page-footer {
-        display: none;
-      }
-    }
-  </style>
+        .powered strong {
+            color: #42607f;
+        }
+
+        .footer-version {
+            opacity: 0.76;
+        }
+
+        /* =======================================================
+           RESPONSIVO
+           ======================================================= */
+
+        @media (max-width: 1050px) {
+
+            body {
+                padding: 20px;
+            }
+
+            .login-container {
+                grid-template-columns: 1fr;
+
+                max-width: 670px;
+
+                margin: auto;
+            }
+
+            .brand-side {
+                min-height: 500px;
+
+                padding: 45px 45px 42px;
+            }
+
+            .brand-content {
+                padding: 50px 0;
+            }
+
+            .brand-title {
+                font-size: 42px;
+            }
+
+            .login-side {
+                padding: 65px 45px;
+            }
+        }
+
+        @media (max-width: 620px) {
+
+            body {
+                padding: 0;
+
+                background: #fff;
+            }
+
+            .page {
+                width: 100%;
+            }
+
+            .login-container {
+                border-radius: 0;
+
+                box-shadow: none;
+
+                min-height: 100vh;
+            }
+
+            .brand-side {
+                min-height: 365px;
+
+                padding: 29px 27px;
+            }
+
+            .logo-area {
+                min-height: 58px;
+            }
+
+            .logo-area img {
+                max-width: 190px;
+                max-height: 58px;
+            }
+
+            .brand-content {
+                padding:
+                    42px
+                    0
+                    15px;
+            }
+
+            .brand-title {
+                font-size: 31px;
+
+                letter-spacing: -1px;
+            }
+
+            .brand-description {
+                font-size: 14px;
+
+                max-width: 390px;
+            }
+
+            .brand-line {
+                margin: 21px 0;
+            }
+
+            .benefits {
+                display: none;
+            }
+
+            .login-side {
+                padding:
+                    52px
+                    25px
+                    45px;
+            }
+
+            .login-heading h2 {
+                font-size: 24px;
+            }
+
+            .security-info {
+                margin-top: 36px;
+            }
+
+            .footer {
+                display: none;
+            }
+        }
+
+    </style>
+
 </head>
 
 <body>
 
-<div class="background-lines"></div>
+<div class="page-decoration"></div>
 
-<main class="login-wrapper">
 
-  <!-- ============================================================
-       ÁREA VISUAL / IDENTIDADE DO CLIENTE
-       ============================================================ -->
+<div class="page">
 
-  <section class="brand-panel">
+    <main class="login-container">
 
-    <div class="client-logo">
 
-      <!--
-        Substituir pelo logo do cliente:
+        <!-- ===================================================
+             IDENTIDADE
+             =================================================== -->
 
-        <img src="logo-cliente.png" alt="Logo Cliente">
+        <section class="brand-side">
 
-        Caso não tenha logo, deixar o placeholder abaixo.
-      -->
+            <div
+                class="brand-background"
+                id="brandBackground">
+            </div>
 
-      <div class="logo-placeholder">
+            <div class="brand-overlay"></div>
 
-        <div class="logo-placeholder-icon">
-          ◇
+            <div class="brand-curve"></div>
+
+
+            <div class="logo-area">
+
+                <img
+                    id="clientLogo"
+                    src="/logoam2.png"
+                    alt="AM2"
+                >
+
+            </div>
+
+
+            <div class="brand-content">
+
+                <h1
+                    class="brand-title"
+                    id="brandTitle">
+
+                    Tecnologia que<br>
+                    conecta imagens,<br>
+
+                    <span class="brand-title-highlight">
+                        diagnósticos e vidas.
+                    </span>
+
+                </h1>
+
+
+                <div class="brand-line"></div>
+
+
+                <p
+                    class="brand-description"
+                    id="brandDescription">
+
+                    Plataforma completa para gestão,
+                    visualização e compartilhamento
+                    de imagens médicas com segurança
+                    e eficiência.
+
+                </p>
+
+            </div>
+
+
+            <div class="benefits">
+
+                <div class="benefit">
+
+                    <div class="benefit-icon">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <path
+                                d="
+                                    M12 3
+                                    l7 3
+                                    v5
+                                    c0 5
+                                    -3 8
+                                    -7 10
+                                    -4 -2
+                                    -7 -5
+                                    -7 -10
+                                    V6
+                                    z
+                                "
+                            />
+
+                            <path
+                                d="
+                                    M9 12
+                                    l2 2
+                                    4 -4
+                                "
+                            />
+
+                        </svg>
+
+                    </div>
+
+                    <strong>Seguro</strong>
+
+                    <span>
+                        Proteção e segurança
+                        para suas informações
+                    </span>
+
+                </div>
+
+
+                <div class="benefit">
+
+                    <div class="benefit-icon">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <path
+                                d="
+                                    M6 18
+                                    h12
+                                    a4 4 0 0 0 0 -8
+                                    a6 6 0 0 0 -11 -2
+                                    a5 5 0 0 0 -1 10
+                                    z
+                                "
+                            />
+
+                        </svg>
+
+                    </div>
+
+                    <strong>Acessível</strong>
+
+                    <span>
+                        Imagens disponíveis
+                        onde você precisar
+                    </span>
+
+                </div>
+
+
+                <div class="benefit">
+
+                    <div class="benefit-icon">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <path
+                                d="
+                                    M13 2
+                                    L5 14
+                                    h6
+                                    l-1 8
+                                    9 -13
+                                    h-6
+                                    z
+                                "
+                            />
+
+                        </svg>
+
+                    </div>
+
+                    <strong>Eficiente</strong>
+
+                    <span>
+                        Mais produtividade
+                        para sua equipe
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ===================================================
+             LOGIN
+             =================================================== -->
+
+        <section class="login-side">
+
+            <div class="login-box">
+
+
+                <header class="login-heading">
+
+                    <h2 id="welcomeTitle">
+                        Bem-vindo(a)!
+                    </h2>
+
+                    <p id="welcomeText">
+                        Entre com suas credenciais
+                        para acessar o sistema.
+                    </p>
+
+                </header>
+
+
+                <div
+                    id="loginError"
+                    class="login-error">
+                </div>
+
+
+                <form
+                    id="loginForm"
+                    autocomplete="on">
+
+
+                    <!-- USUÁRIO -->
+
+                    <div class="form-group">
+
+                        <label for="username">
+                            Usuário
+                        </label>
+
+
+                        <div class="input-box">
+
+                            <svg
+                                class="input-icon"
+                                viewBox="0 0 24 24">
+
+                                <circle
+                                    cx="12"
+                                    cy="8"
+                                    r="4"
+                                />
+
+                                <path
+                                    d="
+                                        M5 21
+                                        a7 7 0 0 1 14 0
+                                    "
+                                />
+
+                            </svg>
+
+
+                            <input
+                                id="username"
+                                name="username"
+                                type="text"
+                                placeholder="Digite seu usuário"
+                                autocomplete="username"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SENHA -->
+
+                    <div class="form-group">
+
+                        <label for="password">
+                            Senha
+                        </label>
+
+
+                        <div class="input-box">
+
+                            <svg
+                                class="input-icon"
+                                viewBox="0 0 24 24">
+
+                                <rect
+                                    x="5"
+                                    y="10"
+                                    width="14"
+                                    height="11"
+                                    rx="2"
+                                />
+
+                                <path
+                                    d="
+                                        M8 10
+                                        V7
+                                        a4 4 0 0 1 8 0
+                                        v3
+                                    "
+                                />
+
+                            </svg>
+
+
+                            <input
+                                id="password"
+                                name="password"
+                                type="password"
+                                placeholder="Digite sua senha"
+                                autocomplete="current-password"
+                                required
+                            >
+
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                id="passwordToggle"
+                                aria-label="Mostrar senha"
+                            >
+
+                                <svg viewBox="0 0 24 24">
+
+                                    <path
+                                        d="
+                                            M2 12
+                                            s4 -6 10 -6
+                                            10 6 10 6
+                                            -4 6 -10 6
+                                            S2 12 2 12
+                                            z
+                                        "
+                                    />
+
+                                    <circle
+                                        cx="12"
+                                        cy="12"
+                                        r="2.5"
+                                    />
+
+                                </svg>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="form-options"
+                        id="forgotPasswordArea">
+
+                        <a
+                            href="#"
+                            class="forgot-link"
+                            id="forgotPasswordLink">
+
+                            Esqueceu sua senha?
+
+                        </a>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="login-button"
+                        id="loginButton">
+
+                        <span id="loginButtonText">
+                            Entrar
+                        </span>
+
+                    </button>
+
+
+                    <div class="security-info">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <path
+                                d="
+                                    M12 3
+                                    l7 3
+                                    v5
+                                    c0 5
+                                    -3 8
+                                    -7 10
+                                    -4 -2
+                                    -7 -5
+                                    -7 -10
+                                    V6
+                                    z
+                                "
+                            />
+
+                            <path
+                                d="
+                                    M9 12
+                                    l2 2
+                                    4 -4
+                                "
+                            />
+
+                        </svg>
+
+
+                        <span>
+                            Ambiente seguro e protegido.<br>
+                            Seus dados são tratados
+                            em conformidade com a LGPD.
+                        </span>
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer class="footer">
+
+        <div
+            class="powered"
+            id="poweredBy">
+
+            Tecnologia
+
+            <strong>
+                AM2 PACS
+            </strong>
+
+            • Tecnologia para Saúde
+
         </div>
 
-        <div>
-          <strong>SEU LOGO</strong>
-          <span>AQUI</span>
-        </div>
 
-      </div>
+        <div class="footer-version">
 
-    </div>
+            <span id="copyrightYear"></span>
 
-    <div class="brand-content">
-
-      <h1>
-        Tecnologia que<br>
-        conecta imagens,<br>
-        <span>diagnósticos e vidas.</span>
-      </h1>
-
-      <div class="brand-separator"></div>
-
-      <p>
-        Plataforma completa para gestão, visualização
-        e compartilhamento de imagens médicas
-        com segurança e eficiência.
-      </p>
-
-    </div>
-
-    <div class="benefits">
-
-      <div class="benefit">
-
-        <div class="benefit-icon">
-          <svg viewBox="0 0 24 24">
-            <path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/>
-            <path d="M12 8v5"/>
-          </svg>
-        </div>
-
-        <strong>Seguro</strong>
-
-        <p>
-          Seus dados sempre<br>
-          protegidos
-        </p>
-
-      </div>
-
-      <div class="benefit">
-
-        <div class="benefit-icon">
-          <svg viewBox="0 0 24 24">
-            <path d="M6 18h12a4 4 0 0 0 0-8 6 6 0 0 0-11-2 5 5 0 0 0-1 10z"/>
-          </svg>
-        </div>
-
-        <strong>Acessível</strong>
-
-        <p>
-          Acesse de qualquer<br>
-          lugar com segurança
-        </p>
-
-      </div>
-
-      <div class="benefit">
-
-        <div class="benefit-icon">
-          <svg viewBox="0 0 24 24">
-            <path d="M13 2L5 14h6l-1 8 9-13h-6z"/>
-          </svg>
-        </div>
-
-        <strong>Eficiente</strong>
-
-        <p>
-          Fluxos otimizados para<br>
-          mais produtividade
-        </p>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- ============================================================
-       LOGIN
-       ============================================================ -->
-
-  <section class="login-panel">
-
-    <div class="login-box">
-
-      <div class="login-header">
-
-        <h2>
-          Bem-vindo(a) de volta!
-        </h2>
-
-        <p>
-          Entre com suas credenciais para acessar o sistema.
-        </p>
-
-      </div>
-
-
-      <form id="loginForm">
-
-        <!-- USUÁRIO -->
-
-        <div class="field">
-
-          <label for="email">
-            E-mail
-          </label>
-
-          <div class="input-wrapper">
-
-            <svg viewBox="0 0 24 24">
-              <circle cx="12" cy="8" r="4"/>
-              <path d="M5 21a7 7 0 0 1 14 0"/>
-            </svg>
-
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="seu@email.com"
-              autocomplete="username"
-              required
-            >
-
-          </div>
+            <span id="footerCompany">
+                AM2 Soluções
+            </span>
 
         </div>
 
+    </footer>
 
-        <!-- SENHA -->
-
-        <div class="field">
-
-          <label for="password">
-            Senha
-          </label>
-
-          <div class="input-wrapper">
-
-            <svg viewBox="0 0 24 24">
-              <rect x="5" y="10" width="14" height="11" rx="2"/>
-              <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
-            </svg>
-
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Digite sua senha"
-              autocomplete="current-password"
-              required
-            >
-
-            <button
-              type="button"
-              class="password-toggle"
-              id="passwordToggle"
-              aria-label="Mostrar senha"
-            >
-
-              <svg viewBox="0 0 24 24">
-                <path d="M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12z"/>
-                <circle cx="12" cy="12" r="2"/>
-              </svg>
-
-            </button>
-
-          </div>
-
-        </div>
+</div>
 
 
-        <div class="forgot">
+<!-- ==========================================================
+     CONFIGURAÇÃO VISUAL
+     ========================================================== -->
 
-          <a href="/forgot-password">
-            Esqueceu sua senha?
-          </a>
-
-        </div>
-
-
-        <button
-          class="btn-primary"
-          type="submit"
-        >
-          Entrar
-        </button>
-
-
-        <div class="divider">
-          ou continue com
-        </div>
-
-
-        <button
-          type="button"
-          class="btn-sso"
-          id="ssoButton"
-        >
-          ▦ &nbsp; Acessar com SSO
-        </button>
-
-
-        <div class="security-message">
-
-          <svg viewBox="0 0 24 24">
-            <path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/>
-            <path d="M9 12l2 2 4-4"/>
-          </svg>
-
-          <span>
-            Seus dados estão protegidos<br>
-            em conformidade com a LGPD
-          </span>
-
-        </div>
-
-      </form>
-
-    </div>
-
-  </section>
-
-</main>
-
-
-<footer class="page-footer">
-
-  <div class="copyright">
-    © 2026 AM2 PACS. Todos os direitos reservados.
-  </div>
-
-  <div class="footer-controls">
-
-    <select class="footer-select">
-      <option>🌐 Português</option>
-      <option>English</option>
-      <option>Español</option>
-    </select>
-
-    <select class="footer-select">
-      <option>☀ Claro</option>
-      <option>🌙 Escuro</option>
-    </select>
-
-  </div>
-
-</footer>
+<script src="/branding.js"></script>
 
 
 <script>
 
-  /*
-   * ============================================================
-   * MOSTRAR / OCULTAR SENHA
-   * ============================================================
-   */
+    /*
+     * ==========================================================
+     * CONFIGURAÇÃO PADRÃO
+     * ==========================================================
+     */
 
-  const passwordInput =
-    document.getElementById("password");
+    const defaultBranding = {
 
-  const passwordToggle =
-    document.getElementById("passwordToggle");
+        systemName:
+            "AM2 PACS",
 
-  passwordToggle.addEventListener("click", () => {
+        institutionName:
+            "AM2 PACS",
 
-    const showing =
-      passwordInput.type === "text";
+        logo:
+            "/logoam2.png",
 
-    passwordInput.type =
-      showing
-        ? "password"
-        : "text";
+        loginBackground:
+            "/login-background.jpg",
 
-  });
+        primaryColor:
+            "#0877C9",
 
+        primaryDark:
+            "#063A67",
 
-  /*
-   * ============================================================
-   * LOGIN
-   *
-   * Aqui podemos integrar posteriormente com a API atual do PACS.
-   * ============================================================
-   */
+        titleLine1:
+            "Tecnologia que",
 
-  document
-    .getElementById("loginForm")
-    .addEventListener("submit", async (event) => {
+        titleLine2:
+            "conecta imagens,",
 
-      event.preventDefault();
+        titleHighlight:
+            "diagnósticos e vidas.",
 
-      const email =
-        document.getElementById("email").value;
+        description:
+            "Plataforma completa para gestão, visualização e compartilhamento de imagens médicas com segurança e eficiência.",
 
-      const password =
-        document.getElementById("password").value;
+        welcomeTitle:
+            "Bem-vindo(a)!",
 
-      console.log({
-        email,
-        password
-      });
+        welcomeText:
+            "Entre com suas credenciais para acessar o sistema.",
 
-      /*
-       * Exemplo:
-       *
-       * const response = await fetch("/api/login", {
-       *
-       *   method: "POST",
-       *
-       *   headers: {
-       *     "Content-Type": "application/json"
-       *   },
-       *
-       *   body: JSON.stringify({
-       *     email,
-       *     password
-       *   })
-       *
-       * });
-       *
-       */
+        showForgotPassword:
+            true,
 
-    });
+        forgotPasswordUrl:
+            "#",
+
+        showPoweredBy:
+            true,
+
+        company:
+            "AM2 Soluções",
+
+        loginEndpoint:
+            "/api/login"
+
+    };
 
 
-  /*
-   * ============================================================
-   * PERSONALIZAÇÃO DO CLIENTE
-   * ============================================================
-   */
+    /*
+     * ==========================================================
+     * MESCLA CONFIGURAÇÃO
+     * ==========================================================
+     *
+     * window.PACS_BRANDING será criado pelo branding.js.
+     */
 
-  function aplicarIdentidadeCliente(config) {
+    const branding = {
 
-    const root =
-      document.documentElement;
+        ...defaultBranding,
 
-    if (config.corPrincipal) {
-      root.style.setProperty(
-        "--primary",
-        config.corPrincipal
-      );
+        ...(window.PACS_BRANDING || {})
+
+    };
+
+
+    /*
+     * ==========================================================
+     * CORES
+     * ==========================================================
+     */
+
+    function hexToRgb(hex) {
+
+        let value =
+            hex.replace("#", "");
+
+
+        if (value.length === 3) {
+
+            value =
+                value
+                    .split("")
+                    .map(
+                        character =>
+                            character + character
+                    )
+                    .join("");
+
+        }
+
+
+        const number =
+            parseInt(value, 16);
+
+
+        return {
+
+            r:
+                (number >> 16) & 255,
+
+            g:
+                (number >> 8) & 255,
+
+            b:
+                number & 255
+
+        };
+
     }
 
-    if (config.corEscura) {
-      root.style.setProperty(
-        "--primary-dark",
-        config.corEscura
-      );
+
+    function applyColors() {
+
+        const root =
+            document.documentElement;
+
+
+        root.style.setProperty(
+            "--primary",
+            branding.primaryColor
+        );
+
+
+        root.style.setProperty(
+            "--primary-dark",
+            branding.primaryDark
+        );
+
+
+        const rgb =
+            hexToRgb(
+                branding.primaryColor
+            );
+
+
+        root.style.setProperty(
+            "--primary-rgb",
+            `${rgb.r}, ${rgb.g}, ${rgb.b}`
+        );
+
     }
 
-  }
+
+    /*
+     * ==========================================================
+     * APLICA IDENTIDADE
+     * ==========================================================
+     */
+
+    function applyBranding() {
+
+        applyColors();
 
 
-  /*
-   * Exemplo:
-   *
-   * Essas informações podem vir do banco de dados.
-   */
+        document
+            .getElementById("pageTitle")
+            .textContent =
+                branding.systemName;
 
-  aplicarIdentidadeCliente({
 
-    corPrincipal: "#0867d8",
+        const logo =
+            document
+                .getElementById("clientLogo");
 
-    corEscura: "#07437a"
 
-  });
+        logo.src =
+            branding.logo;
+
+
+        logo.alt =
+            branding.institutionName;
+
+
+        document
+            .getElementById("brandBackground")
+            .style
+            .backgroundImage =
+                `url("${branding.loginBackground}")`;
+
+
+        document
+            .getElementById("brandTitle")
+            .innerHTML = `
+
+                ${branding.titleLine1}<br>
+
+                ${branding.titleLine2}<br>
+
+                <span
+                    class="brand-title-highlight">
+
+                    ${branding.titleHighlight}
+
+                </span>
+
+            `;
+
+
+        document
+            .getElementById("brandDescription")
+            .textContent =
+                branding.description;
+
+
+        document
+            .getElementById("welcomeTitle")
+            .textContent =
+                branding.welcomeTitle;
+
+
+        document
+            .getElementById("welcomeText")
+            .textContent =
+                branding.welcomeText;
+
+
+        const forgotArea =
+            document
+                .getElementById(
+                    "forgotPasswordArea"
+                );
+
+
+        if (
+            branding.showForgotPassword
+        ) {
+
+            forgotArea.style.display =
+                "flex";
+
+
+            document
+                .getElementById(
+                    "forgotPasswordLink"
+                )
+                .href =
+                    branding
+                        .forgotPasswordUrl;
+
+        } else {
+
+            forgotArea.style.display =
+                "none";
+
+        }
+
+
+        const powered =
+            document
+                .getElementById("poweredBy");
+
+
+        if (!branding.showPoweredBy) {
+
+            powered.style.visibility =
+                "hidden";
+
+        }
+
+
+        document
+            .getElementById("footerCompany")
+            .textContent =
+                branding.company;
+
+
+        document
+            .getElementById("copyrightYear")
+            .textContent =
+                `© ${new Date().getFullYear()} `;
+
+    }
+
+
+    applyBranding();
+
+
+    /*
+     * ==========================================================
+     * MOSTRAR SENHA
+     * ==========================================================
+     */
+
+    const passwordInput =
+        document
+            .getElementById("password");
+
+
+    const passwordToggle =
+        document
+            .getElementById(
+                "passwordToggle"
+            );
+
+
+    passwordToggle
+        .addEventListener(
+            "click",
+            () => {
+
+                const visible =
+                    passwordInput.type
+                    === "text";
+
+
+                passwordInput.type =
+                    visible
+                        ? "password"
+                        : "text";
+
+
+                passwordToggle
+                    .setAttribute(
+                        "aria-label",
+                        visible
+                            ? "Mostrar senha"
+                            : "Ocultar senha"
+                    );
+
+            }
+        );
+
+
+    /*
+     * ==========================================================
+     * LOGIN
+     * ==========================================================
+     *
+     * ATENÇÃO:
+     * ajuste somente esta função conforme a API atual do PACS.
+     *
+     * O visual da página não depende da API.
+     * ==========================================================
+     */
+
+    const loginForm =
+        document
+            .getElementById(
+                "loginForm"
+            );
+
+
+    const loginButton =
+        document
+            .getElementById(
+                "loginButton"
+            );
+
+
+    const loginButtonText =
+        document
+            .getElementById(
+                "loginButtonText"
+            );
+
+
+    const loginError =
+        document
+            .getElementById(
+                "loginError"
+            );
+
+
+    function showError(message) {
+
+        loginError.textContent =
+            message;
+
+
+        loginError
+            .classList
+            .add("visible");
+
+    }
+
+
+    function hideError() {
+
+        loginError.textContent =
+            "";
+
+
+        loginError
+            .classList
+            .remove("visible");
+
+    }
+
+
+    loginForm
+        .addEventListener(
+            "submit",
+            async event => {
+
+                event.preventDefault();
+
+                hideError();
+
+
+                const username =
+                    document
+                        .getElementById(
+                            "username"
+                        )
+                        .value
+                        .trim();
+
+
+                const password =
+                    passwordInput
+                        .value;
+
+
+                if (
+                    !username ||
+                    !password
+                ) {
+
+                    showError(
+                        "Informe usuário e senha."
+                    );
+
+                    return;
+
+                }
+
+
+                loginButton.disabled =
+                    true;
+
+
+                loginButtonText.textContent =
+                    "Entrando...";
+
+
+                try {
+
+                    /*
+                     * =============================================
+                     * EXEMPLO DE INTEGRAÇÃO
+                     * =============================================
+                     *
+                     * Remova o bloco abaixo quando for
+                     * integrar com o endpoint real.
+                     */
+
+
+                    console.log(
+                        "Login enviado:",
+                        {
+                            username,
+                            password:
+                                "********"
+                        }
+                    );
+
+
+                    /*
+                     * Exemplo real:
+                     *
+                     *
+                     * const response =
+                     *     await fetch(
+                     *         branding.loginEndpoint,
+                     *         {
+                     *
+                     *             method:
+                     *                 "POST",
+                     *
+                     *             headers: {
+                     *
+                     *                 "Content-Type":
+                     *                     "application/json"
+                     *
+                     *             },
+                     *
+                     *             body:
+                     *                 JSON.stringify({
+                     *
+                     *                     username,
+                     *                     password
+                     *
+                     *                 })
+                     *
+                     *         }
+                     *
+                     *     );
+                     *
+                     *
+                     * if (!response.ok) {
+                     *
+                     *     throw new Error(
+                     *         "Usuário ou senha inválidos."
+                     *     );
+                     *
+                     * }
+                     *
+                     *
+                     * const data =
+                     *     await response.json();
+                     *
+                     *
+                     * localStorage.setItem(
+                     *     "token",
+                     *     data.token
+                     * );
+                     *
+                     *
+                     * window.location.href =
+                     *     "/app";
+                     *
+                     */
+
+
+                } catch (error) {
+
+                    showError(
+                        error.message
+                        ||
+                        "Não foi possível realizar o login."
+                    );
+
+                } finally {
+
+                    loginButton.disabled =
+                        false;
+
+
+                    loginButtonText.textContent =
+                        "Entrar";
+
+                }
+
+            }
+        );
 
 </script>
 
 </body>
+
 </html>
