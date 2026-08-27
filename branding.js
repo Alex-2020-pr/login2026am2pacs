@@ -1,51 +1,25 @@
 window.PACS_BRANDING = {
+  systemName: "AM2 PACS",
+  institutionName: "AM2 Soluções",
+  logo: "./logoam2.png",
+  loginBackground: "./login-background.jpg",
 
-    systemName:
-        "AM2 PACS",
+  primaryColor: "#1686F3",
+  primaryDark: "#08335D",
 
-    institutionName:
-        "AM2 Soluções",
+  titleLine1: "Tecnologia que",
+  titleLine2: "conecta imagens,",
+  titleHighlight: "diagnósticos e vidas.",
 
-    logo:
-        "/logoam2.png",
+  description:
+    "Plataforma completa para gestão, visualização e compartilhamento de imagens médicas com segurança e eficiência.",
 
-    loginBackground:
-        "/login-background.jpg",
+  welcomeTitle: "Bem-vindo(a) de volta!",
+  welcomeText: "Entre com suas credenciais para acessar o sistema.",
 
-    primaryColor:
-        "#0877C9",
+  showForgotPassword: true,
+  forgotPasswordUrl: "#",
 
-    primaryDark:
-        "#063A67",
-
-    titleLine1:
-        "Tecnologia que",
-
-    titleLine2:
-        "conecta imagens,",
-
-    titleHighlight:
-        "diagnósticos e vidas.",
-
-    description:
-        "Plataforma completa para gestão, visualização e compartilhamento de imagens médicas com segurança e eficiência.",
-
-    welcomeTitle:
-        "Bem-vindo(a)!",
-
-    welcomeText:
-        "Entre com suas credenciais para acessar o sistema.",
-
-    showForgotPassword:
-        true,
-
-    forgotPasswordUrl:
-        "/esqueci-senha",
-
-    showPoweredBy:
-        true,
-
-    company:
-        "AM2 Soluções"
-
+  showPoweredBy: true,
+  company: "AM2 Soluções"
 };
