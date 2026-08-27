@@ -4,133 +4,53 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AM2 PACS</title>
-  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./styles.css?v=20260827-EXATO">
 </head>
 <body>
-  <div class="page">
-    <main class="shell">
-      <section class="brand">
-        <div class="brand-bg" id="brandBackground"></div>
-
-        <div class="logo-wrap">
-          <img id="clientLogo" src="./logoam2.png" alt="AM2 Soluções">
-        </div>
-
-        <div class="brand-copy">
-          <h1 id="brandTitle">
-            Tecnologia que<br>
-            conecta imagens,<br>
-            <span class="accent">diagnósticos e vidas.</span>
-          </h1>
-          <div class="dash"></div>
-          <p id="brandDescription">
-            Plataforma completa para gestão, visualização e compartilhamento
-            de imagens médicas com segurança e eficiência.
-          </p>
-        </div>
-
-        <div class="features">
-          <div class="feature">
-            <div class="feature-icon">
-              <svg viewBox="0 0 24 24">
-                <path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/>
-                <path d="M9 12l2 2 4-4"/>
-              </svg>
+<div class="page">
+  <main class="shell">
+    <section class="brand-exact" id="brandExact" aria-label="AM2 PACS"></section>
+    <section class="login-side">
+      <div class="login-box">
+        <header class="login-head">
+          <h2 id="welcomeTitle">Bem-vindo(a) de volta!</h2>
+          <p id="welcomeText">Entre com suas credenciais para acessar o sistema.</p>
+        </header>
+        <div class="error" id="loginError"></div>
+        <form id="loginForm" autocomplete="on">
+          <div class="group">
+            <label for="username">Usuário</label>
+            <div class="input">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>
+              <input id="username" name="username" type="text" placeholder="Digite seu usuário" autocomplete="username" required>
             </div>
-            <strong>Seguro</strong>
-            <span>Seus dados sempre protegidos</span>
           </div>
-
-          <div class="feature">
-            <div class="feature-icon">
-              <svg viewBox="0 0 24 24">
-                <path d="M6 18h12a4 4 0 0 0 0-8 6 6 0 0 0-11-2 5 5 0 0 0-1 10z"/>
-              </svg>
+          <div class="group">
+            <label for="password">Senha</label>
+            <div class="input">
+              <svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+              <input id="password" name="password" type="password" placeholder="Digite sua senha" autocomplete="current-password" required>
+              <button type="button" class="eye" id="togglePassword" aria-label="Mostrar senha">
+                <svg viewBox="0 0 24 24"><path d="M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="2.5"/></svg>
+              </button>
             </div>
-            <strong>Acessível</strong>
-            <span>Acesse de qualquer lugar com segurança</span>
           </div>
-
-          <div class="feature">
-            <div class="feature-icon">
-              <svg viewBox="0 0 24 24">
-                <path d="M13 2L5 14h6l-1 8 9-13h-6z"/>
-              </svg>
-            </div>
-            <strong>Eficiente</strong>
-            <span>Fluxos otimizados para mais produtividade</span>
+          <div class="options" id="forgotArea"><a id="forgotLink" href="#">Esqueceu sua senha?</a></div>
+          <button class="submit" type="submit">Entrar</button>
+          <div class="security">
+            <svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+            <span>Seus dados estão protegidos<br>em conformidade com a LGPD</span>
           </div>
-        </div>
-      </section>
-
-      <section class="login-side">
-        <div class="login-box">
-          <header class="login-head">
-            <h2 id="welcomeTitle">Bem-vindo(a) de volta!</h2>
-            <p id="welcomeText">Entre com suas credenciais para acessar o sistema.</p>
-          </header>
-
-          <div class="error" id="loginError"></div>
-
-          <form id="loginForm" autocomplete="on">
-            <div class="group">
-              <label for="username">Usuário</label>
-              <div class="input">
-                <svg viewBox="0 0 24 24">
-                  <circle cx="12" cy="8" r="4"/>
-                  <path d="M5 21a7 7 0 0 1 14 0"/>
-                </svg>
-                <input id="username" name="username" type="text"
-                       placeholder="Digite seu usuário" autocomplete="username" required>
-              </div>
-            </div>
-
-            <div class="group">
-              <label for="password">Senha</label>
-              <div class="input">
-                <svg viewBox="0 0 24 24">
-                  <rect x="5" y="10" width="14" height="11" rx="2"/>
-                  <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
-                </svg>
-                <input id="password" name="password" type="password"
-                       placeholder="Digite sua senha" autocomplete="current-password" required>
-                <button type="button" class="eye" id="togglePassword" aria-label="Mostrar senha">
-                  <svg viewBox="0 0 24 24">
-                    <path d="M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12z"/>
-                    <circle cx="12" cy="12" r="2.5"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <div class="options" id="forgotArea">
-              <a id="forgotLink" href="#">Esqueceu sua senha?</a>
-            </div>
-
-            <button class="submit" type="submit">Entrar</button>
-
-            <div class="security">
-              <svg viewBox="0 0 24 24">
-                <path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/>
-                <path d="M9 12l2 2 4-4"/>
-              </svg>
-              <span>
-                Seus dados estão protegidos<br>
-                em conformidade com a LGPD
-              </span>
-            </div>
-          </form>
-        </div>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <div id="powered">Tecnologia <strong>AM2 PACS</strong> · Tecnologia para Saúde</div>
-      <div>© <span id="year"></span> <span id="company">AM2 Soluções</span></div>
-    </footer>
-  </div>
-
-  <script src="./branding.js"></script>
-  <script src="./app.js"></script>
+        </form>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div id="powered">Tecnologia <strong>AM2 PACS</strong> · Tecnologia para Saúde</div>
+    <div>© <span id="year"></span> <span id="company">AM2 Soluções</span></div>
+  </footer>
+</div>
+<script src="./branding.js?v=20260827-EXATO"></script>
+<script src="./app.js?v=20260827-EXATO"></script>
 </body>
 </html>
