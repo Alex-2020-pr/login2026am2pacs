@@ -55,3 +55,8 @@ O formulário visual está pronto. O `submit` em `app.js` deve ser conectado ao 
 ## Observação
 
 Os caminhos dos assets usam `./`, o que facilita publicar esta pasta em subdiretórios e também testar em servidores locais.
+
+## Referência visual aprovada
+
+O arquivo `preview-aprovado.png` contém a referência visual aprovada para esta versão.
+O arquivo `login-background.jpg` é o asset de fundo usado pela página.
